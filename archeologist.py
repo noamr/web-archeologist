@@ -38,6 +38,10 @@ DOMAIN_REPO_MAP = {
     "datatracker.ietf.org": "httpwg/http-extensions", 
 }
 
+def log(msg, use_json=False):
+    if not use_json:
+        print(f"[*] {msg}", file=sys.stderr)
+
 def get_repo_for_url(url):
     parsed = urlparse(url)
     domain = parsed.netloc
@@ -68,16 +72,18 @@ def get_repo_for_url(url):
 
     return None, None
 
-def ensure_repo(repo_url, repo_name):
+def ensure_repo(repo_url, repo_name, use_json=False):
     target_dir = os.path.join(CACHE_DIR, repo_name.replace("/", "-"))
     if not os.path.exists(CACHE_DIR):
         os.makedirs(CACHE_DIR, exist_ok=True)
     if not os.path.exists(target_dir):
-        print(f"Cloning {repo_url} into {target_dir}...")
+        log(f"Cloning {repo_url} into cache...", use_json)
+        # Use depth 1000 for efficiency but still enough history
         subprocess.check_call(["git", "clone", "--depth", "1000", repo_url, target_dir])
     return target_dir
 
-def find_source_file(repo_path, fragment, url=None):
+def find_source_file(repo_path, fragment, url=None, use_json=False):
+    log(f"Searching for source file containing '{fragment}'...", use_json)
     if "whatwg-html" in repo_path:
         return os.path.join(repo_path, "source")
     
@@ -128,7 +134,8 @@ def find_source_file(repo_path, fragment, url=None):
             return path
     return None
 
-def get_line_for_fragment(source_file, fragment):
+def get_line_for_fragment(source_file, fragment, use_json=False):
+    log(f"Mapping fragment to line number in {os.path.basename(source_file)}...", use_json)
     patterns = [
         rf'id=["\']?{re.escape(fragment)}["\']?\b',
         rf'data-x=["\']?{re.escape(fragment)}["\']?\b',
@@ -149,11 +156,32 @@ def get_line_for_fragment(source_file, fragment):
         return int(output.split(":")[0])
     except:
         pass
+
+    # Fallback for multi-line: search for the last word in a header/dfn
+    if len(search_words) > 1:
+        last_word = search_words[-1]
+        try:
+            # Use word boundaries for the last word to avoid partial matches like "Helper"
+            output = subprocess.check_output(["grep", "-niE", f"(<h[1-6]|<dfn|Name:|# ).*\\b{re.escape(last_word)}\\b", source_file], text=True)
+            for line_match in output.split("\n"):
+                if not line_match.strip(): continue
+                ln = int(line_match.split(":")[0])
+                try:
+                    # Look for preceding words in the same line or previous lines
+                    context = subprocess.check_output(["sed", "-n", f"{max(1, ln-2)},{ln}p", source_file], text=True).lower()
+                    if any(w.lower() in context for w in search_words[:-1]):
+                        return ln
+                except: pass
+            return int(output.split(":")[0])
+        except:
+            pass
+
     return None
 
-def trace_history(repo_path, source_file, line, fast=False):
+def trace_history(repo_path, source_file, line, fast=False, use_json=False):
     rel_source = os.path.relpath(source_file, repo_path)
     if fast:
+        log(f"Performing fast Pickaxe search for content of line {line}...", use_json)
         try:
             blame = subprocess.check_output([
                 "git", "-C", repo_path, "blame", "-L", f"{line},{line}", rel_source, "--porcelain"
@@ -171,6 +199,7 @@ def trace_history(repo_path, source_file, line, fast=False):
         except:
             pass
 
+    log(f"Performing deep line-trace history for line {line} (this may take a moment)...", use_json)
     try:
         output = subprocess.check_output([
             "git", "-C", repo_path, "log", 
@@ -182,7 +211,8 @@ def trace_history(repo_path, source_file, line, fast=False):
     except:
         return None
 
-def find_commits_for_issue(repo_path, issue_id):
+def find_commits_for_issue(repo_path, issue_id, use_json=False):
+    log(f"Searching for commits referencing issue #{issue_id}...", use_json)
     try:
         pattern = f"#{issue_id}\\b"
         output = subprocess.check_output([
@@ -196,11 +226,13 @@ def find_commits_for_issue(repo_path, issue_id):
 
 def extract_links(text):
     links = []
+    # GitHub Issues/PRs
     gh_matches = re.findall(r"(?:#|whatwg/html#|w3c/csswg-drafts#|WICG/[^/]+#|httpwg/[^/]+#)(\d+)", text)
     for m in gh_matches:
         links.append({"type": "GitHub Issue", "url": f"GH#{m}"})
         links.append({"type": "WPT Search", "url": f"https://github.com/web-platform-tests/wpt/search?q={m}"})
     
+    # URLs
     urls = re.findall(r"https?://[^\s\)\(]+", text)
     for u in urls:
         label = "Link"
@@ -283,8 +315,8 @@ def main():
     if issue_match:
         org, repo, issue_id = issue_match.groups()
         repo_name = f"{org or 'whatwg'}/{repo}"
-        repo_path = ensure_repo(f"https://github.com/{repo_name}.git", repo_name)
-        history = find_commits_for_issue(repo_path, issue_id)
+        repo_path = ensure_repo(f"https://github.com/{repo_name}.git", repo_name, use_json)
+        history = find_commits_for_issue(repo_path, issue_id, use_json)
         commits = parse_history(history)
         if use_json:
             print(json.dumps({"repo": repo_name, "issue": issue_id, "commits": commits}, indent=2))
@@ -301,14 +333,20 @@ def main():
     else:
         fragment = urlparse(input_val).fragment or input_val.split("#")[-1]
 
-    repo_path = ensure_repo(repo_url, repo_name)
-    source_file = find_source_file(repo_path, fragment, url=(input_val if "http" in input_val else None))
-    if not source_file: sys.exit(1)
+    repo_path = ensure_repo(repo_url, repo_name, use_json)
+    source_file = find_source_file(repo_path, fragment, url=(input_val if "http" in input_val else None), use_json=use_json)
+    if not source_file:
+        if not use_json:
+            print(f"Error: Could not find source file for {fragment} in {repo_path}")
+        sys.exit(1)
 
-    line = get_line_for_fragment(source_file, fragment)
-    if not line: sys.exit(1)
+    line = get_line_for_fragment(source_file, fragment, use_json)
+    if not line:
+        if not use_json:
+            print(f"Error: Could not find line for {fragment} in {source_file}")
+        sys.exit(1)
 
-    history = trace_history(repo_path, source_file, line, fast=fast_mode)
+    history = trace_history(repo_path, source_file, line, fast=fast_mode, use_json=use_json)
     commits = parse_history(history)
     
     if use_json:
