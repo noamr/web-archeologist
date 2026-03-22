@@ -6,10 +6,12 @@ This skill enables the agent to trace any clause, element, algorithm, or GitHub 
 Before cloning repositories, use these tools to find the canonical definition and its impact across the web platform.
 
 ### A. Finding the Canonical Definition (ReSpec Xref)
-If you only have a term (e.g., "fetch timing info") but no URL, use the ReSpec Xref service:
+If you only have a term (e.g., "fetch timing info") but no URL, use the ReSpec Xref API:
 ```bash
 # Search for a term across all known specifications
-curl -s "https://respec.org/xref/?term=fetch+timing+info" | grep -o 'https://[^"]*#[^"]*' | head -n 1
+curl -s -X POST "https://respec.org/xref" \
+  -H "Content-Type: application/json" \
+  -d '{"keys": [{"term": "fetch timing info"}]}' | jq '.result[][1][0].uri'
 ```
 
 ### B. Finding All References (WebDex)
@@ -30,6 +32,9 @@ Always use `~/.gemini/cache/specs` for local clones.
 | `drafts.csswg.org` | `w3c/csswg-drafts` (Search `**/*.bs`) |
 | `httpwg.org` | `httpwg/http-extensions` |
 | `wicg.github.io` | `WICG/<name>` |
+| `source.chromium.org` | `chromium/chromium` |
+| `webkit.org` | `WebKit/WebKit` |
+| `searchfox.org` | `mozilla/gecko-dev` |
 
 **Action**: Clone with `--depth 1000`. Use `git fetch --unshallow` if history is cut off.
 
@@ -48,19 +53,42 @@ Search for the fragment name using these patterns in order:
     -   If the fragment is inside a nested tag, use `grep -nE 'data-x="fragment"'` then scan back 5 lines with `sed` to find the opening `<dfn`.
 3.  **CSS Property**: `grep -nE "Name:\s*fragment" <file>` (Inside a `propdef` block).
 
+### Step 3: Browser Engine Source Discovery
+If given a link to `source.chromium.org`, WebKit's GitHub, or Mozilla Searchfox:
+- **Chromium**: Remove the URL prefix (e.g., `source.chromium.org/chromium/chromium/src/+/main:`) to isolate the file path.
+- **WebKit**: Remove the URL prefix (e.g., `github.com/WebKit/WebKit/blob/main/`) to isolate the file path.
+- **Mozilla (Gecko)**: Remove the URL prefix (e.g., `searchfox.org/mozilla-central/source/`) to isolate the file path.
+- **Function Search**: If searching for a symbol name (e.g., `FetchManager::Loader::Start`), use `grep -rn "SymbolName" .` to find the implementation.
+
 ## 4. History Tracing Strategies
+... (Strategies omitted for brevity) ...
 
-### Strategy 1: Fast Pickaxe (Speed)
-1. `git blame -L <line>,<line> <file>` to find the most recent landing SHA.
-2. `git log -S "<exact_line_content>" --oneline --reverse <file>` to find the earliest commit.
+## 8. Spec Annotated Call Graph Construction
+Use this protocol to build a tree of callers and callees for a specific algorithm or concept, annotating the relationships with spec links and rationale.
 
-### Strategy 2: Deep Line-Trace
-For complex refactors where the prose was re-indented or moved:
-- `git log -L <line>,<line>:<rel_file_path> --no-patch --pretty=format:"%H%n%an%n%ad%n%s%n%b%n---END---"`
+### A. Finding Callees (Internal Dependencies)
+1.  **Locate the Definition Block**: Use the heuristics in Section 3 to find the `<div algorithm>` or structural block.
+2.  **Scan for References**: Identify all `<a>` tags or terms in `[= ... =]` or `{{ ... }}` brackets within the block.
+3.  **Resolve Specs**: For each reference, determine if it is internal (same file) or external (use ReSpec Xref to find the source spec).
+4.  **Describe Relationship**: Note how the callee is used (e.g., "Invoked to validate the origin", "Passed as an argument to initialize the fetch params").
 
-## 5. Rationale Reconstruction
-Analyze commit messages for:
-- **Editor Intent**: `[e]` (Editorial), `[ct]` (Tree Construction), `[giow]` (Implementer).
-- **Consensus**: `Resolution:` or `RESOLVED:` (Links to meeting minutes).
-- **WPT Search**: `https://github.com/web-platform-tests/wpt/search?q=ID`
-- **SVN**: `git-svn-id: .*@(\d+)` -> Search `https://www.google.com/search?q=site:lists.w3.org+rID`
+### B. Finding Callers (Incoming Dependencies)
+1.  **Internal Callers**: `grep` the current specification for the term's `id` or `lt` (link text).
+2.  **External Callers**: Use **WebDex** (`http://dontcallmedom.github.io/webdex/`) to find which other specifications reference this definition.
+3.  **Rationale**: Analyze the calling context to describe *why* this spec is invoking the algorithm.
+
+### C. Output Format (The Tree)
+Present the graph as a nested Markdown list with the following structure:
+- `Algorithm Name` [Spec Link] - "Short description of the algorithm's purpose."
+  - **Callees**:
+    - `Child Algorithm` [Spec Link] - "Relationship: [How it's used]"
+  - **Callers**:
+    - `Parent Algorithm` [Spec Link] - "Relationship: [Why it calls this]"
+
+**Example**:
+- `Main Fetch` [fetch/#main-fetch] - "The entry point for all network requests."
+  - **Callees**:
+    - `HTTP-network-or-cache fetch` [fetch/#http-network-or-cache-fetch] - "Relationship: Invoked for HTTP(S) schemes."
+  - **Callers**:
+    - `HTML Navigation` [html/#navigate] - "Relationship: Used to fetch the document resource."
+
