@@ -19,6 +19,11 @@ To see which other specs depend on a definition, use WebDex (by @dontcallmedom).
 - **Tool**: `http://dontcallmedom.github.io/webdex/`
 - **Manual Search**: Search the term in WebDex to find "References" and "Definitions".
 
+### C. Universal Search (WebSpec Index)
+For a comprehensive search across all modern and historical web specifications:
+- **CLI Repository**: [jnjaeschke/webspec-index](https://github.com/jnjaeschke/webspec-index)
+- **Usage**: Install with `cargo binstall webspec-index`. This tool provides full-text search, cross-reference tracking, and graph traversal across HTML, DOM, URL, CSS, ECMAScript, and 70+ other specifications. Use this to find where terms are defined if ReSpec Xref fails or if you need to build a cross-reference graph.
+
 ## 2. Repository Mapping & Caching
 Always use `~/.gemini/cache/specs` for local clones.
 
