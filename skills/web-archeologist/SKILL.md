@@ -90,17 +90,21 @@ If given a link to `source.chromium.org`, WebKit's GitHub, or Mozilla Searchfox:
 ... (Strategies omitted for brevity) ...
 
 ## 5. Tracing Informal Discussions (IRC/Matrix)
-When GitHub issues or Bugzilla reports reference a "discussion on IRC" or when you need to find the real-time debate behind a 2006-2016 era change:
+When GitHub issues or Bugzilla reports reference a "discussion on IRC" or when you need to find the real-time debate behind a change:
 
-### A. WHATWG IRC Logs (Historical)
+### A. WHATWG IRC Logs (2006-2016)
 - **Local Search (Recommended)**: Clone `KrijnHoetmer/irc-logs` and use `grep` to search across channels and dates.
   - `grep -rEi "createContextualFragment" ~/.gemini/cache/specs/irc-logs/whatwg`
 - **Online Archive**: [krijnhoetmer.nl/irc-logs/](https://krijnhoetmer.nl/irc-logs/)
-- **Search Tip**: If local search is unavailable, use Google with `site:krijnhoetmer.nl/irc-logs/whatwg "term"`.
+- **Search Tip**: If local search is unavailable, use Google with `site:krijnhoetmer.nl/irc-logs/whatwg "term"`. This is the primary archive for the formative years of WHATWG (2006-2016).
 
-### B. Modern WHATWG Logs (Matrix)
+### B. WHATWG IRC Logs (2016-2021)
 - **Archive**: [matrixlogs.bakkot.com/irc-whatwg/](https://matrixlogs.bakkot.com/irc-whatwg/)
-- **Usage**: Use this for more recent discussions (post-2018) that happened in the #whatwg channel, now bridged to Matrix.
+- **Usage**: Use this for discussions in 2016-2021 that happened in the #whatwg IRC channel.
+
+### C. WHATWG Matrix Logs (2021-present)
+- **Archive**: [matrixlogs.bakkot.com/WHATWG/](https://matrixlogs.bakkot.com/WHATWG/)
+- **Usage**: Use this for more recent discussions (post-2021) that happened in the #whatwg Matrix channel.
 
 ## 8. Spec Annotated Call Graph Construction
 Use this protocol to build a tree of callers and callees for a specific algorithm or concept, annotating the relationships with spec links and rationale.
