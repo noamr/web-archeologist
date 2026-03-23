@@ -24,6 +24,18 @@ For a comprehensive search across all modern and historical web specifications:
 - **CLI Repository**: [jnjaeschke/webspec-index](https://github.com/jnjaeschke/webspec-index)
 - **Usage**: Install with `cargo binstall webspec-index`. This tool provides full-text search, cross-reference tracking, and graph traversal across HTML, DOM, URL, CSS, ECMAScript, and 70+ other specifications. Use this to find where terms are defined if ReSpec Xref fails or if you need to build a cross-reference graph.
 
+### D. MDN Web Docs (The "Explainer")
+If a term is ambiguous or the spec definition is too low-level to understand the intent:
+- **Search**: `https://developer.mozilla.org/en-US/search?q=term`
+- **Usage**: MDN often bridges the gap between the "What" (spec) and the "How" (usage). Use it to identify which specification is the current "canonical" one for a feature, as it often links directly to the normative spec sections.
+- **Disambiguation**: If Xref returns multiple results (e.g., for "Image"), MDN can help you identify if the user is likely referring to the `HTMLImageElement`, a CSS `<image>` type, or a Canvas 2D image source.
+
+### E. The Explainer (The "Intent")
+Before diving into spec prose, always look for the **Explainer**:
+- **Source**: Search the "Initial Issue" or the "Landing PR" for links to `explainer.md` or a dedicated repository (often in `WICG/`).
+- **Priority**: Treat the Explainer as the highest-signal source for "Why" a feature exists, its constraints, and the alternatives considered.
+- **Search Tip**: `site:github.com "WICG" "term" "explainer"`
+
 ## 2. Repository Mapping & Caching
 Always use `~/.gemini/cache/specs` for local clones.
 
