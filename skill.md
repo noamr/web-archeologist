@@ -69,6 +69,17 @@ If given a link to `source.chromium.org`, WebKit's GitHub, or Mozilla Searchfox:
 ## 4. History Tracing Strategies
 ... (Strategies omitted for brevity) ...
 
+## 5. Tracing Informal Discussions (IRC/Matrix)
+When GitHub issues or Bugzilla reports reference a "discussion on IRC" or when you need to find the real-time debate behind a 2006-2016 era change:
+
+### A. WHATWG IRC Logs (Historical)
+- **Archive**: [krijnhoetmer.nl/irc-logs/](https://krijnhoetmer.nl/irc-logs/)
+- **Search Tip**: Use Google with `site:krijnhoetmer.nl/irc-logs/whatwg "term"` to find specific discussions. This is the primary archive for the formative years of WHATWG.
+
+### B. Modern WHATWG Logs (Matrix)
+- **Archive**: [matrixlogs.bakkot.com/irc-whatwg/](https://matrixlogs.bakkot.com/irc-whatwg/)
+- **Usage**: Use this for more recent discussions (post-2018) that happened in the #whatwg channel, now bridged to Matrix.
+
 ## 8. Spec Annotated Call Graph Construction
 Use this protocol to build a tree of callers and callees for a specific algorithm or concept, annotating the relationships with spec links and rationale.
 
