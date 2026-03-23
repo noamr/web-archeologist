@@ -16,11 +16,35 @@ This skill defines an archeological protocol for:
    - **SVN Revisions**: Direct search links for `lists.w3.org` archives.
    - **Browser Bugs**: Chromium, WebKit, and Gecko trackers.
 
-## How to Use
-This repository defines the **Web Standards Archeologist** agent skill.
+## Usage with Gemini CLI
 
-- **For AI Agents**: Include the content of `skill.md` in your system prompt or workspace instructions.
-- **For Humans**: Follow the manual protocols defined in `skill.md` to perform deep historical investigations into web platform features.
+This repository is optimized for use with the [Gemini CLI](https://github.com/google/gemini-cli).
+
+### 1. As an Agent Skill (Recommended)
+Add this repository as a specialized skill that Gemini can activate on-demand when it needs to perform spec archeology.
+
+```bash
+# From within the web-archeologist directory
+gemini skills link .
+```
+
+Gemini will now automatically discover the **Web Standards Archeologist** skill based on the description in `SKILL.md` and use the `activate_skill` tool when relevant to your requests.
+
+### 2. Manual Context Injection
+You can inject the protocol into any specific prompt using the `@` command:
+
+```bash
+gemini "Analyze this fragment: https://html.spec.whatwg.org/#main-fetch @SKILL.md"
+```
+
+### 3. Persistent Workspace Context
+To make this protocol available across your entire workspace, import it into your `GEMINI.md` file:
+
+```markdown
+# My Project Context
+...
+@/path/to/web-archeologist/SKILL.md
+```
 
 ## Supported Standards & Engines
 - **Web Standards**: HTML, CSS, DOM, Fetch, URL, etc.
