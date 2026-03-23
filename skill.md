@@ -37,6 +37,7 @@ Always use `~/.gemini/cache/specs` for local clones.
 | `searchfox.org` | `mozilla/gecko-dev` |
 
 **Action**: Clone with `--depth 1000`. Use `git fetch --unshallow` if history is cut off.
+> **Warning**: A shallow clone (`--depth`) can lead to hallucinations where the oldest commit in the shallow history is incorrectly identified as the origin of a line. Always `git fetch --unshallow` before performing a deep history trace or `git log -L`.
 
 ## 3. Locating "The Definition" (Heuristics)
 Given a fragment ID (e.g., `#main-fetch`), find the exact line. **The true definition is the `<dfn>` or structural block defining the term.**
