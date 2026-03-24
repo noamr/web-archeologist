@@ -24,7 +24,7 @@ For a comprehensive search across all modern and historical web specifications:
 - **CLI Repository**: [jnjaeschke/webspec-index](https://github.com/jnjaeschke/webspec-index)
 - **Usage**: Install with `cargo binstall webspec-index`. This tool provides full-text search, cross-reference tracking, and graph traversal across HTML, DOM, URL, CSS, ECMAScript, and 70+ other specifications. Use this to find where terms are defined if ReSpec Xref fails or if you need to build a cross-reference graph.
 
-### D. MDN Web Docs (The "Explainer")
+### D. MDN Web Docs (The "developer-facing index")
 If a term is ambiguous or the spec definition is too low-level to understand the intent:
 - **Search**: `https://developer.mozilla.org/en-US/search?q=term`
 - **Usage**: MDN often bridges the gap between the "What" (spec) and the "How" (usage). Use it to identify which specification is the current "canonical" one for a feature, as it often links directly to the normative spec sections.
