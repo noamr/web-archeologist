@@ -24,10 +24,12 @@ For a comprehensive search across all modern and historical web specifications:
 - **CLI Repository**: [jnjaeschke/webspec-index](https://github.com/jnjaeschke/webspec-index)
 - **Usage**: Install with `cargo binstall webspec-index`. This tool provides full-text search, cross-reference tracking, and graph traversal across HTML, DOM, URL, CSS, ECMAScript, and 70+ other specifications. Use this to find where terms are defined if ReSpec Xref fails or if you need to build a cross-reference graph.
 
-### D. MDN Web Docs (The "developer-facing index")
+### D. MDN Web Docs (The "Explainer")
 If a term is ambiguous or the spec definition is too low-level to understand the intent:
-- **Search**: `https://developer.mozilla.org/en-US/search?q=term`
+- **Search API (Recommended)**:
+  `curl -s "https://developer.mozilla.org/api/v1/search?q=term" | jq '.documents[0].mdn_url'`
 - **Usage**: MDN often bridges the gap between the "What" (spec) and the "How" (usage). Use it to identify which specification is the current "canonical" one for a feature, as it often links directly to the normative spec sections.
+
 - **Disambiguation**: If Xref returns multiple results (e.g., for "Image"), MDN can help you identify if the user is likely referring to the `HTMLImageElement`, a CSS `<image>` type, or a Canvas 2D image source.
 
 ### E. The Explainer (The "Intent")
@@ -52,6 +54,7 @@ Always use `~/.gemini/cache/specs` for local clones.
 | `source.chromium.org` | `chromium/chromium` |
 | `webkit.org` | `WebKit/WebKit` |
 | `searchfox.org` | `mozilla/gecko-dev` |
+| `krijnhoetmer.nl/irc-logs` | `KrijnHoetmer/irc-logs` |
 
 **Action**: Clone with `--depth 1000`. Use `git fetch --unshallow` if history is cut off.
 > **Warning**: A shallow clone (`--depth`) can lead to hallucinations where the oldest commit in the shallow history is incorrectly identified as the origin of a line. Always `git fetch --unshallow` before performing a deep history trace or `git log -L`.
@@ -85,8 +88,10 @@ If given a link to `source.chromium.org`, WebKit's GitHub, or Mozilla Searchfox:
 When GitHub issues or Bugzilla reports reference a "discussion on IRC" or when you need to find the real-time debate behind a 2006-2016 era change:
 
 ### A. WHATWG IRC Logs (Historical)
-- **Archive**: [krijnhoetmer.nl/irc-logs/](https://krijnhoetmer.nl/irc-logs/)
-- **Search Tip**: Use Google with `site:krijnhoetmer.nl/irc-logs/whatwg "term"` to find specific discussions. This is the primary archive for the formative years of WHATWG.
+- **Local Search (Recommended)**: Clone `KrijnHoetmer/irc-logs` and use `grep` to search across channels and dates.
+  - `grep -rEi "createContextualFragment" ~/.gemini/cache/specs/irc-logs/whatwg`
+- **Online Archive**: [krijnhoetmer.nl/irc-logs/](https://krijnhoetmer.nl/irc-logs/)
+- **Search Tip**: If local search is unavailable, use Google with `site:krijnhoetmer.nl/irc-logs/whatwg "term"`.
 
 ### B. Modern WHATWG Logs (Matrix)
 - **Archive**: [matrixlogs.bakkot.com/irc-whatwg/](https://matrixlogs.bakkot.com/irc-whatwg/)
