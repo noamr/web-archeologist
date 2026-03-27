@@ -1,3 +1,8 @@
+---
+name: web-archeologist
+description: Trace any clause, element, algorithm, or GitHub issue/PR in Web Standards (WHATWG, W3C, WICG, IETF) back to its historical origins.
+---
+
 # Agent Skill: Web Standards Archeologist (Paper Trail)
 
 This skill enables the agent to trace any clause, element, algorithm, or GitHub issue/PR in Web Standards (WHATWG, W3C, WICG, IETF) back to its historical origins.
