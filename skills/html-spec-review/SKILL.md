@@ -51,6 +51,25 @@ This skill provides the official guidelines, prose style conventions, and format
 *   **Conditional Statements**:
     *   *Inline consequence*: Use the full **"If [condition], then [consequence]"** structure (e.g., "If <var>x</var> is true, **then** return.").
     *   *Block/Sub-list consequence*: Omit "**then**" and end with a colon (e.g., "If <var>x</var> is true:" followed by a nested list).
+    *   *Multiple conditions (more than two)*: Use **"If any of the following are true:"** etc, followed by a `<ul>` containing the conditions, with the consequence in a subsequent `<p>` starting with "then...". Do not chain multiple "or" clauses in inline prose.
+        ```html
+        <li>
+         <p>If any of the following are true:</p>
+
+         <ul>
+          <li><p><var>urlRecord</var> is failure;</p></li>
+
+          <li><p><var>urlRecord</var>'s <span data-x="concept-url-scheme">scheme</span> is "<code
+          data-x="">data</code>" or "<code data-x="">javascript</code>"; or</p></li>
+
+          <li><p>running <span>Is base allowed for Document?</span> on <var>urlRecord</var> and
+          <var>document</var> returns "<code data-x="">Blocked</code>",</p></li>
+         </ul>
+
+         <p>then set <var>element</var>'s <span>frozen base URL</span> to <var>document</var>'s
+         <span>fallback base URL</span> and return.</p>
+        </li>
+        ```
 *   **Branching & Fallbacks ("otherwise")**:
     *   *Subsequent branches*: "Otherwise, if [condition], [consequence]." (No "then" keyword).
     *   *Fallback branch*: Use a simple "**Otherwise, [consequence]**" or "**Otherwise:**". Do not repeat negative conditions from previous branches.
