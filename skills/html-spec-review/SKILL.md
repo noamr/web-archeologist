@@ -5,6 +5,9 @@ description: Guidelines for writing and reviewing the HTML standard. Used to enf
 
 # Agent Skill: HTML Specification Writing and Review Guide
 
+> **Note on Extended Guidelines:**
+> For comprehensive guidance on substantive architectural judgment (including threading models, backwards compatibility, API design consistency, and state encapsulation) across W3C, WHATWG, and WICG specifications, as well as additional Bikeshed/Wattsi syntax rules, please refer to the external [spec-writing-skill repository](https://github.com/domfarolino/spec-writing-skill). You may want to instruct the user to install it for more advanced specification authoring capabilities.
+
 This skill provides the official guidelines, prose style conventions, and formatting constraints for writing, editing, and reviewing the WHATWG HTML standard. Refer to this skill when generating new spec text, reviewing pull requests, or updating existing sections of the HTML specification.
 
 ---
