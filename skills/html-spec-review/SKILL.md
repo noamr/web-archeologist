@@ -21,9 +21,11 @@ This skill provides the official guidelines, prose style conventions, and format
     *   Every `<li>` must wrap its text content in a `<p>` (except in `<ul class="brief">`).
     *   Format as `<li><p>Text</p></li>` on the same line if possible, or indent nested blocks.
     *   Separate consecutive list items with a blank line. Do not put blank lines at the list's absolute start/end.
-*   **List Item Indentation**: Inside `<ol>` or `<ul>` (except brief lists):
-    *   `<li>` is indented by 3 spaces.
-    *   Subsequent lines within the `<li>` (including nested `<p>` or `<p class="note">` tags, or subsequent wrapped lines of text) must be indented by **4 spaces**.
+*   **List Item Indentation**:
+    *   Indentation uses a single space per block nesting level.
+    *   For a top-level list, `<ol>` is indented by 2 spaces, and `<li>` is indented by 3 spaces.
+    *   Wrapped lines of text within `<li><p>...</p></li>` match the indentation of the line (e.g., 3 spaces for top-level list items).
+    *   Nested block elements (such as `<p>`, `<ul>`, or `<ol>`) starting on their own line inside `<li>` are indented by 1 space relative to the parent `<li>` (e.g., 4 spaces for top-level list items).
 *   **Web IDL Blocks (`<pre class="idl">`)**:
     *   Every IDL member, attribute, and operation must be on its own separate line. Never place multiple declarations on the same line.
     *   Do not wrap parameter names or type names in `<var>` tags inside Web IDL blocks.
