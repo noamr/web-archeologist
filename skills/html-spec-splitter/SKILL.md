@@ -5,7 +5,7 @@ description: Use this skill for an efficient way to split/concat the HTML spec s
 
 # Agent Skill: HTML Spec Source Splitter
 
-When examining or editing the HTML standard source file (`/Users/nrosenthal/code/spex/html-build/html/source`), it is often difficult to work with using standard tools due to its massive size. This skill provides an efficient workflow to split the giant source file into smaller, easily manageable chunks.
+When examining or editing the HTML standard source file (typically `html-build/html/source`), it is often difficult to work with using standard tools due to its massive size. This skill provides an efficient workflow to split the giant source file into smaller, easily manageable chunks.
 
 ## Why Use This?
 - **Faster Examination**: Searching, reading, and reasoning about the spec is much faster when isolated to specific sections.
@@ -19,10 +19,12 @@ The provided Python tool (`split_html.py`) splits the HTML source file at every 
 
 ## Usage Steps
 
+**Note on Paths**: In the commands below, `<path/to/html/source>` refers to the path to the HTML source file in the user's workspace, and `<skill-dir>` refers to the directory where this skill is installed (e.g., `~/.gemini/config/skills/html-spec-splitter`).
+
 ### 1. Request Permission (One-Time)
 To avoid asking for permission with every run, first use the `ask_permission` tool to whitelist the tool's command prefix:
 - **Action**: `command`
-- **Target**: `python3 /Users/nrosenthal/.gemini/config/skills/html-spec-splitter/split_html.py`
+- **Target**: `python3 <skill-dir>/split_html.py` (Replace `<skill-dir>` with the actual absolute path to this skill)
 - **Reason**: To allow efficiently splitting and concatenating the HTML source file without repeated prompts.
 
 *(Note: The user only needs to grant this once, and subsequent runs using this prefix will not be blocked by permission prompts).*
@@ -30,9 +32,9 @@ To avoid asking for permission with every run, first use the `ask_permission` to
 ### 2. Split the Source
 Before examining or editing, run the python script with the `split` argument:
 ```bash
-python3 /Users/nrosenthal/.gemini/config/skills/html-spec-splitter/split_html.py split /Users/nrosenthal/code/spex/html-build/html/source
+python3 <skill-dir>/split_html.py split <path/to/html/source>
 ```
-This will populate the `/Users/nrosenthal/code/spex/html-build/html/split_source/` directory with the section files.
+This will populate a `split_source/` directory next to the source file with the section files.
 
 ### 3. Examine and Edit the Split Files
 Locate the relevant section file in the `split_source` directory (e.g., `10_webappapis.html`). Use standard agent tools (`view_file`, `replace_file_content`, `grep_search`, `multi_replace_file_content`) on these smaller files. This makes inference and context management much more efficient.
@@ -40,6 +42,6 @@ Locate the relevant section file in the `split_source` directory (e.g., `10_weba
 ### 4. Reconstruct the Original File (If Edited)
 Once all edits in the split files are complete, reconstruct the main `source` file by running the script with the `concat` argument:
 ```bash
-python3 /Users/nrosenthal/.gemini/config/skills/html-spec-splitter/split_html.py concat /Users/nrosenthal/code/spex/html-build/html/source
+python3 <skill-dir>/split_html.py concat <path/to/html/source>
 ```
 This will rebuild the entire source file from the parts.
