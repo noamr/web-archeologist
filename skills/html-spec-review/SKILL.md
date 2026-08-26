@@ -24,11 +24,13 @@ This skill provides the official guidelines, prose style conventions, and format
 *   **List Item Indentation**: Inside `<ol>` or `<ul>` (except brief lists):
     *   `<li>` is indented by 3 spaces.
     *   Subsequent lines within the `<li>` (including nested `<p>` or `<p class="note">` tags, or subsequent wrapped lines of text) must be indented by **4 spaces**.
-*   **Web IDL Parameters**: Do not wrap parameter names or type names in `<var>` tags inside Web IDL blocks.
+*   **Web IDL Blocks (`<pre class="idl">`)**:
+    *   Every IDL member, attribute, and operation must be on its own separate line. Never place multiple declarations on the same line.
+    *   Do not wrap parameter names or type names in `<var>` tags inside Web IDL blocks.
 *   **Brief Lists (`<ul class="brief">`)**: Use for simple/short lists. Items must **not** wrap content in a `<p>` tag. No blank lines between items.
 *   **Switch Lists (`<dl class="switch">`)**: Use for complex branch logic. Sibling `<dt>` conditions map to a single `<dd>` consequence/action.
 *   **Tables (`<table>`)**: Use only for multi-dimensional data (e.g., event tables, element properties). Do not use for simple steps or branching.
-*   **Attributes & Tags**: Always use double quotes for attributes. Never omit end tags.
+*   **Attributes & Tags**: Always use double quotes for attributes. Never omit end tags (always close all `<p>` and `<li>` tags).
 
 ---
 
@@ -37,6 +39,10 @@ This skill provides the official guidelines, prose style conventions, and format
 *   **Algorithm Container**: Wrap every algorithm in a `<div algorithm>` (no assigned value). Include the preamble (name, return type) inside it. Do not indent the container's contents.
 *   **Variable Scoping**: Wrap `<var>` elements to scope them. Multi-algorithm scopes can use `<div var-scope>`. If a variable is only used once, add the `ignore` attribute: `<var ignore>x</var>`.
 *   **Variables Initialization**: Use the "initially" pattern when declaring variables or state, e.g., "...initially null", "...initially false", or "...initially the empty list « »".
+*   **Variable Mutation vs. Declaration**: Use **"Set `<var>x</var>` to `<var>y</var>`"** when modifying or reassigning an existing variable, property, or flag. Reserve **"Let `<var>x</var>` be `<var>y</var>`"** strictly for initial variable declarations.
+    *   *Correct*: `If <var>condition</var>, then set <var>mode</var> to "<code data-x="">same-origin</code>".`
+*   **Callback & Sub-algorithm Signatures**: When defining steps to pass as callbacks to other specifications (e.g., Streams `abortAlgorithm`, `writeAlgorithm`, `pullAlgorithm`, `transformAlgorithm`, or Promise reactions), declare the expected parameters explicitly using `given <var>arg</var>:` matching the caller spec's invocation signature.
+    *   *Example*: `Let <var>abortAlgorithm</var> be the following steps given <var>reason</var>:`
 *   **Markup Styles**:
     *   *Assertions*: Wrap the word "Assert" in a `<span>` (e.g., `<span>Assert</span>:`).
     *   *Context*: Wrap `this` keyword in a `<span>` (e.g., `<span>this</span>`).
@@ -45,7 +51,7 @@ This skill provides the official guidelines, prose style conventions, and format
 *   **Keep it Terse & Clean**:
     *   *Conciseness*: Keep prose as short and direct as possible.
     *   *Inlining*: Inline unexported algorithms/operations if they are only invoked/called from a single place.
-    *   *Cleanup*: Remove duplicate variables, unused variables, and redundant steps/checks (e.g. redundant null checks or double parsing).
+    *   *Cleanup*: Remove duplicate variables, unused variables, and redundant steps/checks (e.g. redundant null checks or early silent-return steps that bypass centralized validation algorithms).
 
 ---
 
@@ -77,10 +83,21 @@ This skill provides the official guidelines, prose style conventions, and format
     *   *Subsequent branches*: "Otherwise, if [condition], [consequence]." (No "then" keyword).
     *   *Fallback branch*: Use a simple "**Otherwise, [consequence]**" or "**Otherwise:**". Do not repeat negative conditions from previous branches.
     *   *Inline Ternary*: Use the format: `[value1] if [condition]; otherwise [value2]` (note the semicolon before `otherwise`, and no comma after unless followed by a verb phrase).
-*   **Enums and State Values**:
+*   **Antonym and Negative Concept Linking**:
+    *   When setting boolean flags or checking disabled states, link to the explicit negative definition rather than linking the negative phrase to the positive definition.
+    *   *Example*: `concept-n-script` defines "scripting is enabled", whereas `concept-n-noscript` defines "scripting is disabled". Use: `Set <var>parser</var>'s <span>parser scripting disabled</span> to true if <span data-x="concept-n-noscript">scripting is disabled</span> for <var>document</var>; otherwise false.`
+*   **Enums, Actions, and State Values**:
     *   *Web IDL Enums*: Defined as `"butt"`. Reference in prose as `"<code data-x="">butt</code>"`.
-    *   *Defined Enums*: Defined as `<dfn data-x="...">"no-referrer"</dfn>`. Reference as `<span data-x="...">"no-referrer"</span>`.
+    *   *Defined Enums / Actions*: Defined as `<dfn data-x="...">"no-referrer"</dfn>` or `<dfn data-x="...">"Remove"</dfn>`. Reference when returning or checking as `<span data-x="...">"no-referrer"</span>` or `<span data-x="...">"Remove"</span>`.
     *   *States & Modes*: Capitalize exactly as defined in their definition (e.g., `<span>Disabled</span>`).
+*   **Standard Namespaces Casing**:
+    *   All standard namespace cross-references use lowercase `"namespace"`:
+        *   `<span>HTML namespace</span>`
+        *   `<span>SVG namespace</span>`
+        *   `<span>MathML namespace</span>` (not `<span>MathML Namespace</span>`)
+        *   `<span>XML namespace</span>`
+        *   `<span>XLink namespace</span>`
+        *   `<span>XMLNS namespace</span>`
 *   **Navigation & Exit**: Use "return" or "return <var>value</var>" for entire algorithms; "abort these steps" for sub-steps or parallel sequences.
 *   **Conventions**:
     *   Omit "the string" prefix before string literals (e.g., "match for `<code data-x="">text/html</code>`").
@@ -120,6 +137,9 @@ This skill provides the official guidelines, prose style conventions, and format
 *   **Explanation (`<dd>`)**:
     *   Explain behavior concisely using present-tense verbs ("Returns...", "Updates...", "Throws..."). Avoid implementer terms (never use "must").
     *   Specify key return values, side effects, and thrown exceptions.
+*   **Exception Parity & Synchronization**:
+    *   Document every `DOMException` that an API can throw explicitly in the `domintro` `<dd>` block (e.g., `Throws a "NotSupportedError" DOMException if...`).
+    *   Ensure normative algorithm steps actually throw the promised exception (rather than silently returning null or undefined), and maintain parity across synchronous and streaming variants of methods.
 
 ---
 
