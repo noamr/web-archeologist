@@ -1,6 +1,6 @@
 ---
 name: html-spec-review
-description: Guidelines for writing and reviewing the HTML standard. Used to enforce style, formatting, prose correctness, and developer's edition annotations.
+description: Guidelines for writing and reviewing the HTML standard (`whatwg/html`'s `source` file). Used to enforce style, formatting, prose correctness, and developer's edition annotations.
 ---
 
 # Agent Skill: HTML Specification Writing and Review Guide
@@ -9,6 +9,8 @@ description: Guidelines for writing and reviewing the HTML standard. Used to enf
 > For comprehensive guidance on substantive architectural judgment (including threading models, backwards compatibility, API design consistency, and state encapsulation) across W3C, WHATWG, and WICG specifications, as well as additional Bikeshed/Wattsi syntax rules, please refer to the external [spec-writing-skill repository](https://github.com/domfarolino/spec-writing-skill). You may want to instruct the user to install it for more advanced specification authoring capabilities.
 
 This skill provides the official guidelines, prose style conventions, and formatting constraints for writing, editing, and reviewing the WHATWG HTML standard. Refer to this skill when generating new spec text, reviewing pull requests, or updating existing sections of the HTML specification.
+
+When the work involves reading or editing `source` itself, use the `html-spec-splitter` skill so that each edit is made in a single section file rather than in the whole multi-megabyte file.
 
 ---
 

@@ -46,6 +46,22 @@ To make this protocol available across your entire workspace, import it into you
 @/path/to/web-archeologist/SKILL.md
 ```
 
+## Usage with Claude Code
+
+Symlink the skill directories into your skills directory, so that edits in this checkout take
+effect immediately:
+
+```bash
+# From within the web-archeologist directory
+mkdir -p ~/.claude/skills
+for s in skills/*/; do ln -sfn "$PWD/$s" ~/.claude/skills/; done
+```
+
+Claude Code discovers the skills from the `description` in each `SKILL.md` and invokes them
+on demand; they can also be run explicitly as `/web-archeologist`, `/html-spec-review`, and
+`/html-spec-splitter`. The skill list is built at session startup, so start a new session
+after linking.
+
 ## Supported Standards & Engines
 - **Web Standards**: HTML, CSS, DOM, Fetch, URL, etc.
 - **Chromium**: Blink rendering engine (`third_party/blink`).
