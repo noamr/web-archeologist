@@ -44,7 +44,7 @@ Before diving into spec prose, always look for the **Explainer**:
 - **Search Tip**: `site:github.com "WICG" "term" "explainer"`
 
 ## 2. Repository Mapping & Caching
-Always use `~/.gemini/cache/specs` for local clones.
+Always use a single cache directory for local clones, referred to below as `<cache>`: `~/.gemini/cache/specs` under the Gemini CLI, or `~/.cache/web-archeologist/specs` otherwise.
 
 ### Mapping Table:
 | Domain | GitHub Repository |
@@ -60,6 +60,8 @@ Always use `~/.gemini/cache/specs` for local clones.
 | `webkit.org` | `WebKit/WebKit` |
 | `searchfox.org` | `mozilla/gecko-dev` |
 | `krijnhoetmer.nl/irc-logs` | `KrijnHoetmer/irc-logs` |
+
+> **Note**: `whatwg/html`'s `source` file is over 160,000 lines. Once a trace lands in it, use the `html-spec-splitter` skill to work on a single section instead of the whole file.
 
 **Action**: Clone with `--depth 1000`. Use `git fetch --unshallow` if history is cut off.
 > **Warning**: A shallow clone (`--depth`) can lead to hallucinations where the oldest commit in the shallow history is incorrectly identified as the origin of a line. Always `git fetch --unshallow` before performing a deep history trace or `git log -L`.
@@ -94,7 +96,7 @@ When GitHub issues or Bugzilla reports reference a "discussion on IRC" or when y
 
 ### A. WHATWG IRC Logs (Historical)
 - **Local Search (Recommended)**: Clone `KrijnHoetmer/irc-logs` and use `grep` to search across channels and dates.
-  - `grep -rEi "createContextualFragment" ~/.gemini/cache/specs/irc-logs/whatwg`
+  - `grep -rEi "createContextualFragment" <cache>/irc-logs/whatwg`
 - **Online Archive**: [krijnhoetmer.nl/irc-logs/](https://krijnhoetmer.nl/irc-logs/)
 - **Search Tip**: If local search is unavailable, use Google with `site:krijnhoetmer.nl/irc-logs/whatwg "term"`.
 
