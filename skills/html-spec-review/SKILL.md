@@ -12,6 +12,8 @@ This skill provides the official guidelines, prose style conventions, algorithmi
 
 Refer to this skill when authoring spec text, reviewing pull requests, or conducting rigorous self-reviews to prevent common failure modes that pass automated syntax checks (Wattsi/Bikeshed) but introduce critical logical, security, or architectural regressions.
 
+When the work involves reading or editing `source` itself, use the `html-spec-splitter` skill so that each edit is made in a single section file rather than in the whole multi-megabyte file.
+
 ---
 
 ## 1. Web IDL Rules & Cross-References
