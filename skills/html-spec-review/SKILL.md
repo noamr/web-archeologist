@@ -357,14 +357,30 @@ The HTML specification compiles into a **Living Standard** and a **Developer's E
 
 ---
 
-## 12. Working with Legacy Clauses & Refactoring
+## 12. PR Scope Discipline, Legacy Clauses & Opportunistic Cleanups
 
-- **Consistency vs. Modern Style**:
-  - *New Features / Rewrites*: Strictly follow modern guidelines.
-  - *Minor Edits*: Prioritize local consistency. If modern rules make the patch look out-of-place within a legacy block, match the surrounding style.
-- **Separation of Commits**:
-  - Never mix structural/editorial cleanup (whitespace, IDL formatting, tag modernization) with functional/behavioral changes in the same commit.
-  - Keep editorial cleanups in dedicated commits prefixed `Editorial: ...`.
+### 12.1. PR Scope Discipline (Do Not Touch Unrelated Areas)
+- **Do NOT touch or modify areas unrelated to the main purpose of the current branch/PR.**
+- Avoid "drive-by" reformatting, opportunistic refactoring of distant algorithms, rewrapping unrelated paragraphs, or speculative syntax modernization across unaffected sections of the specification.
+- Unrelated edits create review friction, obscure the core change, increase merge conflict risk across concurrent WHATWG PRs, and risk introducing inadvertent normative regressions into stable spec text.
+
+### 12.2. The Scoped Cleanup Rule (Fix Issues in Touched Areas)
+- **If an area, algorithm, or clause IS being touched by the PR, DO fix any pre-existing style issues, editorial flaws, markup mistakes, or logic bugs within it.**
+- When you are already rewriting, inserting into, or restructuring an algorithm step or clause:
+  - Fix legacy variable lifecycle issues (`Set` without `Let`, duplicate `Let`, dead initializations).
+  - Fix outdated markup (e.g. `<code>` inside `<pre class="idl">`, bare `Assert:`, redundant `data-x`, missing `</p>` before nested lists).
+  - Fix grammar, missing step punctuation (`.`/`:`), or stale domintro notes in the touched section.
+  - Fix subtle logic bugs (e.g. unbound variables on conditional branches, unhandled fallback/null paths, shallow clone leaks) in the modified algorithm.
+- Do NOT perpetuate broken patterns or copy-paste legacy flaws just because the surrounding block previously had them.
+- If the cleanup in the touched area is substantial, place it in a separate preparatory commit (e.g. `Editorial: Clean up <algorithm name>` or `Refactor <algorithm name>`) immediately preceding the substantive behavioral commit, rather than mingling them in a single diff.
+
+### 12.3. Consistency vs. Modern Style in Legacy Clauses
+- *New Features / Rewrites*: Strictly follow modern guidelines.
+- *Minor Edits*: Prioritize local consistency if modern rules would make a small patch look out-of-place within a legacy block; however, never perpetuate semantic bugs or invalid Web IDL.
+
+### 12.4. Separation of Commits
+- Never mix structural/editorial cleanup (whitespace, IDL formatting, tag modernization) with functional/behavioral changes in the same commit.
+- Keep editorial cleanups in dedicated commits prefixed `Editorial: ...`.
 
 ---
 
@@ -501,6 +517,9 @@ Before finalizing or approving any HTML specification PR, run through this compr
 - [ ] Run `python3 scripts/check_wpt_coverage.py --spec-file <spec> --wpt-dir <wpt>` (all modified sinks and exceptions covered).
 
 ### PR Description, Commit Hygiene & Companion PR Audit
+- [ ] **PR Scope Discipline (No Unrelated Edits)**: Are all modified files, algorithms, and clauses directly relevant to the main purpose of the PR? Have drive-by reformatting, opportunistic refactoring of distant algorithms, and unrelated edits been pruned?
+- [ ] **Scoped Cleanup in Touched Areas**: Have pre-existing style issues, editorial flaws, markup mistakes, and logic bugs in the *touched* clauses been fixed rather than perpetuated?
+- [ ] **Commit Separation for Cleanups**: If cleanups in touched areas are non-trivial, are they separated into dedicated preparatory commits (e.g. `Editorial: ...`) preceding the substantive changes?
 - [ ] **No "Editorial:" Prefix on Observable Behavior**: Is the PR or commit prefixed with `Editorial:`? If the change causes entries to be created/queued, changes return values, or rejects promises, remove `Editorial:`.
 - [ ] **PR Description Freshness**: Does the PR description match the actual final diff? Have mentions of dropped helpers, obsolete steps, or old syntax been pruned?
 - [ ] **Checklist & Template Completeness**: Are WPT test links, issue links, and engine bugs properly documented without broken markdown links?
