@@ -1,6 +1,6 @@
 ---
 name: html-spec-splitter
-description: Use this skill for an efficient way to split/concat the HTML spec source when examining or editing it. Splitting the file makes reading, searching, and editing much faster and more reliable.
+description: Use before the first Read, Grep, or Edit of `whatwg/html`'s `source` file. It's multi-megabyte, so working on it whole is slow and edits are error-prone; this splits it at each `<h2` and concatenates it back. Triggers on: any read, search, or edit of that file, "split the source".
 ---
 
 # Agent Skill: HTML Spec Source Splitter

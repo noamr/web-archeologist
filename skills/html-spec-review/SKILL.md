@@ -1,6 +1,6 @@
 ---
 name: html-spec-review
-description: Comprehensive guidelines for writing, editing, and reviewing the WHATWG HTML standard. Enforces style, Web IDL rules, algorithmic correctness, mutation lifecycle, parser edge cases, and developer's edition annotations.
+description: Read before drafting, editing, or reviewing text in the WHATWG HTML standard: `whatwg/html`'s `source` file, a PR against it, or new spec prose, algorithms, IDL, or examples for it. Triggers on: "HTML spec", "HTML standard", "whatwg/html", editing `source`, reviewing a whatwg/html PR.
 ---
 
 # Agent Skill: HTML Specification Writing and Review Guide
