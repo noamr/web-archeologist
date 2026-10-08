@@ -87,7 +87,14 @@ If given a link to `source.chromium.org`, WebKit's GitHub, or Mozilla Searchfox:
 - **Function Search**: If searching for a symbol name (e.g., `FetchManager::Loader::Start`), use `grep -rn "SymbolName" .` to find the implementation.
 
 ## 4. History Tracing Strategies
-... (Strategies omitted for brevity) ...
+
+### Strategy 1: Fast Pickaxe (Speed)
+1. `git blame -L <line>,<line> <file>` to find the most recent landing SHA.
+2. `git log -S "<exact_line_content>" --oneline --reverse <file>` to find the earliest commit.
+
+### Strategy 2: Deep Line-Trace
+For complex refactors where the prose was re-indented or moved:
+- `git log -L <line>,<line>:<rel_file_path> --no-patch --pretty=format:"%H%n%an%n%ad%n%s%n%b%n---END---"`
 
 ## 5. Tracing Informal Discussions (IRC/Matrix)
 When GitHub issues or Bugzilla reports reference a "discussion on IRC" or when you need to find the real-time debate behind a 2006-2016 era change:
@@ -102,7 +109,7 @@ When GitHub issues or Bugzilla reports reference a "discussion on IRC" or when y
 - **Archive**: [matrixlogs.bakkot.com/irc-whatwg/](https://matrixlogs.bakkot.com/irc-whatwg/)
 - **Usage**: Use this for more recent discussions (post-2018) that happened in the #whatwg channel, now bridged to Matrix.
 
-## 8. Spec Annotated Call Graph Construction
+## 6. Spec Annotated Call Graph Construction
 Use this protocol to build a tree of callers and callees for a specific algorithm or concept, annotating the relationships with spec links and rationale.
 
 ### A. Finding Callees (Internal Dependencies)
