@@ -237,6 +237,7 @@ Refer to this skill when authoring spec text, reviewing pull requests, or conduc
 - Strictly wrap lines at **100 characters**.
 - Attributes or their values can contain newlines to respect this.
 - Do not insert newlines between inline tag names and text if it inserts unwanted spaces (e.g., `<i data-x="...">\ntext</i>` is incorrect).
+- After editing, run [`specfmt`](https://github.com/domfarolino/specfmt) in the `whatwg/html` checkout before committing (`-f` if the changes are uncommitted). It reflows only the lines changed on the current branch, and catches wrapping that the linter doesn't.
 
 ### 7.2. Lists (`<ol>`, `<ul>`, `<li>`, `<dt>`, `<dd>`)
 - Every `<li>` must wrap its text content in a `<p>` (except in `<ul class="brief">`).
