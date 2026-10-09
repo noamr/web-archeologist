@@ -149,21 +149,21 @@ Refer to this skill when authoring spec text, reviewing pull requests, or conduc
 
 ### 3.5. Pre-Initialization State Access (Unborn Object Capabilities)
 - **Failure Mode**: Inspecting permissions policy, environment settings, or cross-origin capabilities on an object *before* its child components, document, or global have been instantiated and linked.
-  - *Example (from PR #12890 review)*: Checking `window's relevant settings object's cross-origin isolated capability` before `window` has an associated `Document`. In a newly created Window, its associated document is unset; in a reused `about:blank`, it resolves to the old document's policy rather than the new response's permissions policy!
+  - *Example*: Checking `window's relevant settings object's cross-origin isolated capability` before `window` has an associated `Document`. In a newly created Window, its associated document is unset; in a reused `about:blank`, it resolves to the old document's policy rather than the new response's permissions policy!
 - **Review Rule**:
   - Audit the lifecycle of objects passed to algorithms. Never query capability getters or policy algorithms on an object until all associated subordinates (`window.document`, `intendedParent`, execution context) are fully linked.
   - If a timestamp or state must be captured early, capture the raw/uncoarsened value (e.g. `unsafeSharedCurrentTime`), and coarsen or convert it *after* the document and its permissions policy are bound.
 
 ### 3.6. Fallback & Null Path Auditing on Previously Unconditional Steps
 - **Failure Mode**: When turning a previously unconditional algorithm step into a conditional branch (e.g. `If <var>controller</var> is not null:`), the `Otherwise` path is frequently neglected or assumes all inputs are regular network fetches.
-  - *Example (from PR #12890 review)*: Restricting navigation timing entry creation to when `navigationParams's fetch controller is not null` caused timing entries to silently disappear for `srcdoc` documents, `javascript:` URLs, UA error pages, and `multipart/x-mixed-replace` continuations.
+  - *Example*: Restricting navigation timing entry creation to when `navigationParams's fetch controller is not null` causes timing entries to silently disappear for `srcdoc` documents, `javascript:` URLs, UA error pages, and `multipart/x-mixed-replace` continuations.
 - **Review Rule**:
   - Whenever an algorithm step is guarded by a non-null condition, explicitly audit and document the behavior for every possible non-fetch or null-controller scenario:
     1. `about:srcdoc` and `about:blank` navigations
     2. `javascript:` URL documents
     3. UA-generated error pages
     4. Navigations supplied with synthetic responses (`<object>`, `<embed>`, multipart)
-    5. In-flight aborted traversals (e.g. PR #12846)
+    5. In-flight aborted traversals
   - Ensure the fallback branch creates synthetic fallback structs or documents the intentional omission with matching WPT tests.
 
 ---
@@ -414,7 +414,7 @@ Features touching parsing, security, loading, or scripting often span multiple s
   - The reviewer MUST read the companion PR's diff and ensure the cross-spec contract matches in both directions.
 - **Contract & Polarity Synchronization**:
   - Verify parameter order, types, and Boolean polarities across the spec boundary.
-  - *Real-world failure mode (PR #12583 / TT #606)*: HTML expected streaming sinks to require `createParserOptions` and non-stream sinks to fall back, but the companion TT PR implemented `throwIfMissing` with reversed polarity!
+  - *Real-world failure mode*: HTML expected streaming sinks to require `createParserOptions` and non-stream sinks to fall back, while the companion Trusted Types PR implemented `throwIfMissing` with reversed polarity!
 - **Sentinel Objects vs. String Literals**:
   - When passing sentinel values defined in external specs (e.g., Trusted Types `Stream` sentinel), verify that the HTML algorithm passes the actual sentinel object rather than a string literal (e.g., `"Stream"`), which would trigger string conversions.
 - **Anchor Fragment & Definition Matching**:
@@ -424,7 +424,7 @@ Features touching parsing, security, loading, or scripting often span multiple s
 
 ### 13.3. The "Editorial:" Prefix Trap on Observable Behavior
 - **Never prefix a PR title or commit message with `Editorial:` if the change introduces ANY web-observable behavioral difference.**
-  - *Failure Mode (from PR #12890 review)*: Tagging a commit as `Editorial:` when the algorithm change causes navigation timing entries to be created for `srcdoc`, `javascript:`, or error pages, or when it binds previously unbound parameters.
+  - *Failure Mode*: Tagging a commit as `Editorial:` when the algorithm change causes navigation timing entries to be created for `srcdoc`, `javascript:`, or error pages, or when it binds previously unbound parameters.
   - *Maintainer Impact*: WHATWG maintainers and automated bots rely on the `Editorial:` prefix as a signal to skip cross-browser implementer consensus checks, MDN documentation issues, and WPT tests.
   - *Rule*: If an algorithm alteration fixes an un-bound variable, changes a returned value, alters exception throwing, or modifies when an entry or event is queued, it is **normative**. Keep the commit message un-prefixed (or prefixed with the topic area, e.g. `Navigation timing: ...`).
 
