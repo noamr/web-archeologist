@@ -1,6 +1,6 @@
 ---
 name: html-spec-review
-description: Read before drafting, editing, or reviewing text in the WHATWG HTML standard: `whatwg/html`'s `source` file, a PR against it, or new spec prose, algorithms, IDL, or examples for it. Triggers on: "HTML spec", "HTML standard", "whatwg/html", editing `source`, reviewing a whatwg/html PR.
+description: Read before reading, drafting, editing, or reviewing text in the WHATWG HTML standard: `whatwg/html`'s `source` file, a PR against it, or new spec prose, algorithms, IDL, or examples for it. Triggers on: "HTML spec", "HTML standard", "whatwg/html", reading/editing `source`, "split the source", reviewing a whatwg/html PR.
 ---
 
 # Agent Skill: HTML Specification Writing and Review Guide
@@ -8,11 +8,18 @@ description: Read before drafting, editing, or reviewing text in the WHATWG HTML
 > **Note on Extended Guidelines:**
 > For broader guidance on substantive architectural judgment (including threading models, backwards compatibility, API design consistency, and state encapsulation) across W3C, WHATWG, and WICG specifications, as well as additional Bikeshed/Wattsi syntax rules, please refer to the external [spec-writing-skill repository](https://github.com/domfarolino/spec-writing-skill).
 
-This skill provides the official guidelines, prose style conventions, algorithmic requirements, and structural review principles for writing, editing, and reviewing the WHATWG HTML standard.
+This skill provides the official guidelines, prose style conventions, algorithmic requirements, structural review principles, and tooling for reading, writing, editing, and reviewing the WHATWG HTML standard.
 
 Refer to this skill when authoring spec text, reviewing pull requests, or conducting rigorous self-reviews to prevent common failure modes that pass automated syntax checks (Wattsi/Bikeshed) but introduce critical logical, security, or architectural regressions.
 
-When the work involves reading or editing `source` itself, use the `html-spec-splitter` skill so that each edit is made in a single section file rather than in the whole multi-megabyte file.
+### Working with `whatwg/html`'s `source` File (`split_html.py`)
+
+`whatwg/html`'s `source` file is over 160,000 lines, so reading or editing it whole is slow and error-prone. Before examining or editing `source`, use `scripts/split_html.py` (bundled in this skill directory) to split `source` at each `<h2` tag into `split_source/` (`00_start.html`, `01_introduction.html`, etc.):
+
+1. **Split**: `python3 <skill-dir>/scripts/split_html.py split <path/to/html/source>`
+2. **Read, Edit & Analyze**: Use standard file/search tools (`view_file`/`Read`, `replace_file_content`/`Edit`, `grep_search`/`Grep`) and the static analyzers in `scripts/` directly on the relevant section file(s) in `split_source/` (e.g., `10_webappapis.html`).
+3. **Concatenate (if edited)**: `python3 <skill-dir>/scripts/split_html.py concat <path/to/html/source>`
+4. **Clean up**: `split_source/` is scratch state and is not gitignored in `whatwg/html`. Always concatenate before building, diffing, or committing, then delete `rm -r <path/to/html>/split_source` and verify `git status`.
 
 ---
 

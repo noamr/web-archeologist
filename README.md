@@ -58,9 +58,8 @@ for s in skills/*/; do ln -sfn "$PWD/$s" ~/.claude/skills/; done
 ```
 
 Claude Code discovers the skills from the `description` in each `SKILL.md` and invokes them
-on demand; they can also be run explicitly as `/web-archeologist`, `/html-spec-review`, and
-`/html-spec-splitter`. The skill list is built at session startup, so start a new session
-after linking.
+on demand; they can also be run explicitly as `/web-archeologist` and `/html-spec-review`.
+The skill list is built at session startup, so start a new session after linking.
 
 ## Supported Standards & Engines
 - **Web Standards**: HTML, CSS, DOM, Fetch, URL, etc.

@@ -61,7 +61,7 @@ Always use a single cache directory for local clones, referred to below as `<cac
 | `searchfox.org` | `mozilla/gecko-dev` |
 | `krijnhoetmer.nl/irc-logs` | `KrijnHoetmer/irc-logs` |
 
-> **Note**: `whatwg/html`'s `source` file is over 160,000 lines. Once a trace lands in it, use the `html-spec-splitter` skill to work on a single section instead of the whole file.
+> **Note**: `whatwg/html`'s `source` file is over 160,000 lines. Once a trace lands in it, you can use `split_html.py` in `skills/html-spec-review/scripts/split_html.py` (from the `html-spec-review` skill) to split and inspect a single section instead of the whole file.
 
 **Action**: Clone with `--depth 1000`. Use `git fetch --unshallow` if history is cut off.
 > **Warning**: A shallow clone (`--depth`) can lead to hallucinations where the oldest commit in the shallow history is incorrectly identified as the origin of a line. Always `git fetch --unshallow` before performing a deep history trace or `git log -L`.
