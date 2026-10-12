@@ -428,6 +428,10 @@ Features touching parsing, security, loading, or scripting often span multiple s
   - *Maintainer Impact*: WHATWG maintainers and automated bots rely on the `Editorial:` prefix as a signal to skip cross-browser implementer consensus checks, MDN documentation issues, and WPT tests.
   - *Rule*: If an algorithm alteration fixes an un-bound variable, changes a returned value, alters exception throwing, or modifies when an entry or event is queued, it is **normative**. Keep the commit message un-prefixed (or prefixed with the topic area, e.g. `Navigation timing: ...`).
 
+### 13.4. Consolidate Findings That Share a Root Cause
+- If one finding's fix also resolves another, report them as one finding, with one fix aimed at the cause.
+- *Failure Mode*: A symptom and its cause are reported separately, each with its own fix. The author applies both. The symptom's fix changes pre-existing text more broadly than needed, and the next round has to revert it.
+
 ---
 
 ## 14. Reviewing Web Platform Tests (WPT) & Coverage Auditing
@@ -537,6 +541,7 @@ Before finalizing or approving any HTML specification PR, run through this compr
 - [ ] **Companion PR Synchronization**: If a companion PR in another spec exists (e.g. Trusted Types, DOM, Fetch), has it been audited? Do parameter contracts, sentinel types, and boolean polarities agree in both directions?
 - [ ] **Anchor & Link Validation**: Do cross-spec `data-x-href` links match the companion spec's exact exported anchor fragments?
 - [ ] **Landing Order Established**: Is the merge sequence clearly stated between the companion PRs?
+- [ ] **Findings Consolidated**: Are findings with a shared root cause reported as one, with one fix (see 13.4)?
 
 ### Web Platform Tests (WPT) Coverage Audit
 - [ ] **Diff-to-Test Mapping**: Does every new branch, throwing condition, and fallback path in the spec diff have an explicit test case?
