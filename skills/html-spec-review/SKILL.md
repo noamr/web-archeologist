@@ -398,6 +398,9 @@ The HTML specification compiles into a **Living Standard** and a **Developer's E
 
 A rigorous review does not stop at the specification diff; the PR description and any linked companion PRs in external specifications are frequent vectors for architectural oversights, description drift, and out-of-sync contracts.
 
+### 13.0. Verify You Are Reviewing the Current Head
+- Fetch with `git fetch -f origin pull/N/head:pr-N`, and check that `git rev-parse pr-N` matches `gh pr view N --json headRefOid` before reviewing, for companion PRs too. Without `-f`, a stale local `pr-N` can silently survive.
+
 ### 13.1. PR Description Hygiene & Preventing Drift
 - **Description Drift / Staleness**: During multi-round reviews or stacked PR refactors, PRs frequently evolve. The PR description easily becomes stale, describing abandoned algorithms, dropped helpers, or obsolete parameters.
   - *Audit Rule*: The PR description MUST accurately represent the *final proposed diff*, not the author's initial draft.
@@ -531,6 +534,7 @@ Before finalizing or approving any HTML specification PR, run through this compr
 - [ ] Run `python3 scripts/check_wpt_coverage.py --spec-file <spec> --wpt-dir <wpt>` (all modified sinks and exceptions covered).
 
 ### PR Description, Commit Hygiene & Companion PR Audit
+- [ ] **Current Head Verified**: Does the local SHA match `headRefOid` for every PR reviewed (see 13.0)?
 - [ ] **PR Scope Discipline (No Unrelated Edits)**: Are all modified files, algorithms, and clauses directly relevant to the main purpose of the PR? Have drive-by reformatting, opportunistic refactoring of distant algorithms, and unrelated edits been pruned?
 - [ ] **Scoped Cleanup in Touched Areas**: Have pre-existing style issues, editorial flaws, markup mistakes, and logic bugs in the *touched* clauses been fixed rather than perpetuated?
 - [ ] **Commit Separation for Cleanups**: If cleanups in touched areas are non-trivial, are they separated into dedicated preparatory commits (e.g. `Editorial: ...`) preceding the substantive changes?
