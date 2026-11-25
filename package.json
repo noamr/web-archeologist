@@ -1,0 +1,17 @@
+{
+  "name": "web-archeologist",
+  "version": "0.1.0",
+  "description": "Agent skills and a small CLI/SDK for tracing Web Standards history.",
+  "bin": {
+    "web-archeologist": "cli/web-archeologist.mjs"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/noamr/web-archeologist.git"
+  }
+}
