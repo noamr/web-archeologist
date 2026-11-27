@@ -61,18 +61,21 @@ To make a skill available across your entire workspace, import it into your `GEM
 
 ## Usage with Claude Code
 
-Symlink the skill directories into your skills directory, so that edits in this checkout take
-effect immediately:
+Install the skills as the `web-archeologist` plugin:
 
-```bash
-# From within the web-archeologist directory
-mkdir -p ~/.claude/skills
-for s in skills/*/; do ln -sfn "$PWD/$s" ~/.claude/skills/; done
+```
+/plugin install web-archeologist --marketplace noamr/web-archeologist
 ```
 
-Claude Code discovers the skills from the `description` in each `SKILL.md` and invokes them
-on demand; they can also be run explicitly as `/web-archeologist` and `/html-spec-review`.
-The skill list is built at session startup, so start a new session after linking.
+On Claude Code before 2.1.275, run `/plugin marketplace add noamr/web-archeologist`, then
+`/plugin install web-archeologist@web-archeologist`. The skills are then
+`web-archeologist:web-archeologist` and `web-archeologist:html-spec-review`. Every new commit on
+the default branch is an update: turn on auto-update for the marketplace in `/plugin`, or run
+`/plugin update web-archeologist@web-archeologist`.
+
+To work on the skills, start Claude Code with `claude --plugin-dir /path/to/web-archeologist` (an
+absolute path to your checkout). For that session, it replaces the installed plugin, and
+`/reload-plugins` picks up edits.
 
 ## Supported Standards & Engines
 - **Web Standards**: HTML, CSS, DOM, Fetch, URL, etc.

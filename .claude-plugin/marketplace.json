@@ -1,0 +1,14 @@
+{
+  "name": "web-archeologist",
+  "owner": {
+    "name": "Noam Rosenthal"
+  },
+  "description": "Trace Web Standards spec text, algorithms and issues back to their historical origins",
+  "plugins": [
+    {
+      "name": "web-archeologist",
+      "source": "./",
+      "description": "Trace Web Standards spec text, algorithms and issues back to their historical origins"
+    }
+  ]
+}

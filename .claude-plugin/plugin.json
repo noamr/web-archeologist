@@ -1,0 +1,10 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "web-archeologist",
+  "description": "Trace Web Standards spec text, algorithms and issues back to their historical origins",
+  "license": "MIT",
+  "author": {
+    "name": "Noam Rosenthal"
+  },
+  "repository": "https://github.com/noamr/web-archeologist"
+}
